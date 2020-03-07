@@ -1,48 +1,43 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useReducer, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 
 export const TaskListContext = createContext();
 
 const TaskListContextProvider = props => {
-    const initialState = JSON.parse(localStorage.getItem('tasks')) || [];
-
-    const [tasks, setTasks] = useState(initialState);
-
-    const [editItem, setEditItem] = useState(null);
-
-    useEffect(() => {
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }, [tasks]);
-
-    const addTask = (title) => {
-        setTasks([...tasks, { title, id: uuid() }]);
+    const initialState = {
+        tasks: [],
+        editTask: null
     };
 
-    const removeTask = (id) => {
-        setTasks(tasks.filter(task => task.id !== id));
-    };
+    function reducer(state, action) {
+        const newState = {...state}
 
-    const clearList = () => {
-        setTasks([]);
-    };
+        switch (action.type) {
+            case 'addTask':
+                newState.tasks = [...state.tasks, { title: action.title, id: uuid() }];
+                return newState;
+            case 'removeTask':
+                newState.tasks = state.tasks.filter(task => task.id !== action.id)
+                return newState;
+            case 'clearList':
+                newState.tasks = [];
+                return newState;
+            case 'findItem':
+                newState.editItem = state.tasks.find(task => task.id === action.id);
+                return newState;
+            case 'editTask':
+                newState.tasks = state.tasks.map(task => task.id === action.id ? {title: action.title, id: task.id} : task);
+                newState.editItem = null;
+                return newState;
+            default:
+                throw new Error();
+        }
+    }
 
-    const findItem = id => {
-        const item = tasks.find(task => task.id === id);
-
-        setEditItem(item);
-    };
-
-    const editTask = (title, id) => {
-        const newTasks = tasks.map(
-            (task) => { return task.id === id ? {title, id} : task }
-        );
-
-        setTasks(newTasks);
-        setEditItem(null);
-    };
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     return (
-        <TaskListContext.Provider value={{tasks, addTask, removeTask, clearList, findItem, editTask, editItem}}>
+        <TaskListContext.Provider value={{state, dispatch}}>
             {props.children}
         </TaskListContext.Provider>
     );
