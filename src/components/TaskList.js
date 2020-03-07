@@ -4,6 +4,7 @@ import Task from './Task'
 
 const TaskList = () => {
     const { tasks } = useContext(TaskListContext);
+    
     return (
         <div>
             {tasks.length ? (
@@ -14,8 +15,7 @@ const TaskList = () => {
                 </ul>
             ) : (
                 <div className="no-tasks">No Tasks</div>
-            )}
-            
+            )}     
         </div>
     );
 };

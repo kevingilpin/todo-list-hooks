@@ -6,8 +6,6 @@ const TaskForm = () => {
 
     const [title, setTitle] = useState("");
 
-    const taskInputRef = useRef(null);
-
     const handleChange = e => {
         setTitle(e.target.value);
     };
@@ -20,7 +18,6 @@ const TaskForm = () => {
             addTask(title);
         }
         setTitle("");
-        taskInputRef.current.focus();
     };
 
     useEffect(() => {
@@ -39,8 +36,8 @@ const TaskForm = () => {
                 value={title}
                 className="task-input"
                 placeholder="Add Task..."
-                ref={taskInputRef}
                 required
+                autoFocus
             />
             <div className="buttons">
                 <button type="submit" className="btn add-task-btn">
