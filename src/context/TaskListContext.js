@@ -4,13 +4,13 @@ import { v4 as uuid } from 'uuid';
 export const TaskListContext = createContext();
 
 const TaskListContextProvider = props => {
-    const initialState = {
-        tasks: [],
-        editTask: null
-    };
+    const initialState = { 
+        tasks: JSON.parse(localStorage.getItem('tasks')), 
+        editItem: null
+    } || { tasks: [], editItem: null };
 
     function reducer(state, action) {
-        const newState = {...state}
+        const newState = {...state};
 
         switch (action.type) {
             case 'addTask':
@@ -35,6 +35,10 @@ const TaskListContextProvider = props => {
     }
 
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    useEffect(() => {
+        localStorage.setItem('tasks', JSON.stringify(state.tasks));
+    }, [state.tasks]);
 
     return (
         <TaskListContext.Provider value={{state, dispatch}}>
