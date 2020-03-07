@@ -1,11 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { TaskListContext } from '../context/TaskListContext';
 
 const TaskForm = () => {
-    const { state, dispatch } = useContext(TaskListContext);
-    const editItem = state.editItem;
+    const { state: { editItem }, dispatch } = useContext(TaskListContext);
 
     const [title, setTitle] = useState("");
+
+    const taskInput = useRef(null);
 
     const handleChange = e => {
         setTitle(e.target.value);
@@ -27,6 +28,7 @@ const TaskForm = () => {
         } else {
             setTitle("");
         }
+        taskInput.current.focus();
     }, [editItem]);
 
     return (
@@ -35,6 +37,7 @@ const TaskForm = () => {
                 onChange={handleChange}
                 type="text"
                 value={title}
+                ref={taskInput}
                 className="task-input"
                 placeholder="Add Task..."
                 required
