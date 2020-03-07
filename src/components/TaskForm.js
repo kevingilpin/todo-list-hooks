@@ -6,6 +6,8 @@ const TaskForm = () => {
 
     const [title, setTitle] = useState("");
 
+    const formInput = useRef(null);
+
     const handleChange = e => {
         setTitle(e.target.value);
     };
@@ -26,6 +28,7 @@ const TaskForm = () => {
         } else {
             setTitle("");
         }
+        formInput.current.focus();
     }, [editItem]);
 
     return (
@@ -34,6 +37,7 @@ const TaskForm = () => {
                 onChange={handleChange}
                 type="text"
                 value={title}
+                ref={formInput}
                 className="task-input"
                 placeholder="Add Task..."
                 required
