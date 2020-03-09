@@ -14,11 +14,15 @@ const TaskListContextProvider = props => {
 
         switch (action.type) {
             case 'addTask':
-                newState.tasks = [...state.tasks, { title: action.title, id: uuid() }];
-                return newState;
+                return {
+                    ...state,
+                    tasks: [...state.tasks, { title: action.title, id: uuid() }]
+                };
             case 'removeTask':
-                newState.tasks = state.tasks.filter(task => task.id !== action.id)
-                return newState;
+                return {
+                    ...state,
+                    tasks: state.tasks.filter(task => task.id !== action.id)
+                };
             case 'clearList':
                 newState.tasks = [];
                 return newState;
