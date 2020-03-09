@@ -10,7 +10,6 @@ const TaskListContextProvider = props => {
     } || { tasks: [], editItem: null };
 
     function reducer(state, action) {
-        const newState = {...state};
 
         switch (action.type) {
             case 'addTask':
@@ -24,15 +23,21 @@ const TaskListContextProvider = props => {
                     tasks: state.tasks.filter(task => task.id !== action.id)
                 };
             case 'clearList':
-                newState.tasks = [];
-                return newState;
+                return {
+                    ...state,
+                    tasks: []
+                }
             case 'findItem':
-                newState.editItem = state.tasks.find(task => task.id === action.id);
-                return newState;
+                return {
+                    ...state,
+                    editItem: state.tasks.find(task => task.id === action.id)
+                }
             case 'editTask':
-                newState.tasks = state.tasks.map(task => task.id === action.id ? {title: action.title, id: task.id} : task);
-                newState.editItem = null;
-                return newState;
+                return {
+                    ...state,
+                    tasks: state.tasks.map(task => task.id === action.id ? {title: action.title, id: task.id} : task),
+                    editItem: null
+                }
             default:
                 throw new Error();
         }
